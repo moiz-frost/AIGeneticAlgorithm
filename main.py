@@ -54,11 +54,15 @@ def compute_fitness(x, y):
 
 
 def mutate(probability, population):
-    for child in population:
-        mutation_probability = randrange(0, 100, 1)
-        if mutation_probability in range(0, probability, 1):
-            child[0] += random.uniform(-0.25, 0.25)
-            child[1] += random.uniform(-0.25, 0.25)
+    for elem in population:
+        elem.append(compute_fitness(elem[0], elem[1]))
+
+    for i in range(len(population)):
+        if population[i][2] < 48:
+            mutation_probability = randrange(0, 100, 1)
+            if mutation_probability in range(0, probability, 1):
+                population[i][0] += random.uniform(-0.25, 0.25)
+                population[i][1] += random.uniform(-0.25, 0.25)
     return population
 
 
@@ -78,9 +82,10 @@ def crossover(population, mutation):
 
     # Mutation chance of x%
     x = mutation
-    children_with_mutation_population = mutate(x, possible_children_list)
 
-    for child in possible_children_list:
+    children_with_mutation_population = mutate(5, possible_children_list)
+
+    for child in children_with_mutation_population:
         # if child not in non_duplicate_children_population:
         non_duplicate_children_population.append(child)
 
@@ -100,7 +105,7 @@ def binary_selection(population, no_of_outputs_required):
         fighter_one = population[rand_int_x]
         fighter_two = population[rand_int_y]
         while (rand_int_x == rand_int_y) or (contains(fighter_one, selected_candidates)) or (
-        contains(fighter_two, selected_candidates)):
+                contains(fighter_two, selected_candidates)):
             rand_int_x = random.randint(0, population_len - 1)
             rand_int_y = random.randint(0, population_len - 1)
             fighter_one = population[random.randint(0, population_len - 1)]
